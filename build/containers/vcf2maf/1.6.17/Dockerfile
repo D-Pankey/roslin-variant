@@ -52,30 +52,4 @@ RUN apk add --update \
             && cd /tmp/ensembl-tools-release-${VEP_VERSION}/scripts/variant_effect_predictor \
             && perl INSTALL.pl --AUTO a 2>&1 | tee install.log \
             && cd /tmp && mv /tmp/ensembl-tools-release-${VEP_VERSION}/scripts/variant_effect_predictor /usr/bin/vep \
-      # download and unpack VEP's offline cache
-            && mkdir -p ${VEP_DATA} \
-            && rsync -zvh rsync://ftp.ensembl.org/ensembl/pub/release-86/variation/VEP/homo_sapiens_vep_86_GRCh37.tar.gz ${VEP_DATA} \
-            && tar -zxf ${VEP_DATA}/homo_sapiens_vep_86_GRCh37.tar.gz -C ${VEP_DATA} \
-            && cd /usr/bin/vep \
-            && perl convert_cache.pl --species homo_sapiens --version 86_GRCh37 --dir ${VEP_DATA} \
-            && rm ${VEP_DATA}/homo_sapiens_vep_86_GRCh37.tar.gz \
-      # install bcftools
-            && cd /tmp && wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 \
-            && tar xvjf bcftools-${BCFTOOLS_VERSION}.tar.bz2 \
-            && cd /tmp/bcftools-${BCFTOOLS_VERSION} \
-            && make HTSDIR=/tmp/htslib-${HTSLIB_VERSION} && make install \
-      # install samtools
-            && cd /tmp && wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 \
-            && tar xvjf samtools-${SAMTOOLS_VERSION}.tar.bz2 \
-            && cd /tmp/samtools-${SAMTOOLS_VERSION} \
-            && ./configure --with-htslib=/tmp/htslib-${HTSLIB_VERSION} \
-            && make && make install \
-      # install vcf2maf
-            && cd /tmp && wget -O vcf2maf-v${VCF2MAF_VERSION} https://github.com/mskcc/vcf2maf/archive/v${VCF2MAF_VERSION}.zip \
-            && unzip vcf2maf-v${VCF2MAF_VERSION} \
-            && mkdir -p /usr/bin/vcf2maf/ \
-            && cp -r vcf2maf-${VCF2MAF_VERSION}/* /usr/bin/vcf2maf/ \
-      # clean up
-            && rm -rf /var/cache/apk/* /tmp/* \
-            && chmod +x /usr/bin/runscript.sh \
-            && exec /run_test.sh
+      
